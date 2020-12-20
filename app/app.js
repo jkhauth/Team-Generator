@@ -9,50 +9,91 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-const employee = require("./lib/Employee")
+const Employee = require("./lib/Employee")
 const employees = []
 var count = 0
 
 const questions =
-    [   {type: 'input',
-        name: 'employee_name',
+        [{type: 'input',
+        name: 'name',
         message: 'What is the name of your employee?'},
 
         {type: 'input',
         name: 'email',
         message: 'What is your email?'},
 
+        {type: 'input',
+        name: 'id',
+        message: 'Please enter your ID'}]
+
+
+const createTeam = function(){
+    inquirer.prompt([
         {type: 'list',
         name: 'role',
-        message: 'Select Employees Role:',
-        choices: ['Manager', 'Engineer', 'Intern']}]
+        message: 'Choose a role to create employee:',
+        choices: ['Manager', 'Engineer', 'Intern', 'Create Team']}
+    ]).then((data)=>{
+        if (data.role === 'Manager'){
+        manager();
+        }
+        if (data.role === 'Engineer'){
+        engineer();
+        }
+        if (data.role === 'Intern'){
+        intern();
+        }
+        if (data.role === 'Create Team'){
+        render(employees)
+        fs.appendFileSync('./output/team.html', render(employees))
+        }
+})}
 
+createTeam();
 
-//OPTION TO ADD EMPLOYEES
-const addEmployee = function(){ 
-    inquirer.prompt([
-    {type: 'confirm',
-    name: 'name',
-    message: 'Add another employee?'}
-    ]).then((respsonse) =>{
-    questions();
-})};
-
-//IF MANAGER IS CHOOSEN
+//IF MANAGER IS CHOSEN
 const manager = function(){
-//PROMPT FOR OFFICE NUMBER
-inquirer.prompt(questions).then((data)=>{
-        inquirer.prompt([
-        {type: 'input',
-        name: 'officeNumber',
-        message: 'What is your office number?'}]).
-            //WE GET OFFICE NUMBER THEN
-            then(() =>{
-            var newEmployee = new employee(data.employee_name, data.id, data.email)
-            count++
-            //PUSHES EMPLOYEE TO EMPLOYEES ARRAY
-            employees.push(newEmployee)
-})})}
+    inquirer.prompt(questions).then((data)=>{
+    inquirer.prompt([{
+        type: 'input',
+        name:   'officenumber',
+        message: 'What is your offce number?'
+    }]).then((officenumber)=>{
+        const manager = new Manager(data.name, data.id, data.email, officenumber.officenumber);
+        employees.push(manager)
+        createTeam();
+    })
+})}
+
+//IF ENGINEER IS CHOSEN
+const engineer = function(){
+    inquirer.prompt(questions).then((data)=>{
+        inquirer.prompt([{
+            type: 'input',
+            name:   'github',
+            message: 'What is your github username?'
+        }]).then((github)=>{
+            const engingeer = new Engineer(data.name, data.id, data.email, github.github);
+            employees.push(engingeer)
+            createTeam();
+        })
+})}
+
+//IF INTERN IS CHOSEN
+const intern = function(){
+    inquirer.prompt(questions).then((data)=>{
+        inquirer.prompt([{
+            type: 'input',
+            name:   'school',
+            message: 'What school do you go to?'
+        }]).then((school)=>{
+            const intern = new Intern(data.name, data.id, data.email, school.school);
+            employees.push(intern)
+            createTeam();
+        })
+})}
+
+
 // Write code to use inquirer to gather information about the devWelopment team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 

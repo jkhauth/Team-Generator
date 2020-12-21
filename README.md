@@ -1,5 +1,10 @@
 ## Team Generator
 
+https://github.com/jkhauth/Team-Generator
+
+## Video
+https://drive.google.com/file/d/1acZT7j61xXA-MvR55AvFsldft-oHGXsw/view
+
 ## Description
 
 This repository feautures a node applicaiton that can be used by any workplace that may need to generate a HTML. When the user uses the application, it prompts them questions on which asks them a persons role. Depending on a persons role on their team may feature different questions. When all input is finished, they select the generate team feature and a web page is built for them.
